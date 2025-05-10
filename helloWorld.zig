@@ -5,6 +5,7 @@ pub fn main() void {
     stdout.print("Hello, World!\n", .{}) catch {};
     foo();
     foo2();
+    runArray();
 }
 
 pub fn foo() void {
@@ -31,4 +32,15 @@ pub fn foo2() void {
     const two_strings = my_string ++ "" ++ message;
 
     std.debug.print("{s}\n", .{two_strings});
+}
+
+pub fn runArray() void {
+    const array = [_]i32{ 10, 20, 30, 40, 50 };
+    const menorValor: i32 = 0;
+
+    // Percorre o array com índice e valor
+    for (array) |valor| {
+        if (valor > menorValor)
+            std.debug.print(" {}\n", .{valor});
+    }
 }
