@@ -1,10 +1,10 @@
 const std = @import("std");
 
 pub fn main() void {
-    const stdout = std.io.getStdOut().writer();
-    stdout.print("Hello, World!\n", .{}) catch {};
-    foo();
-    foo2();
+    //const stdout = std.io.getStdOut().writer();
+    //stdout.print("Hello, World!\n", .{}) catch {};
+    //foo();
+    //foo2();
     runArray();
 }
 
@@ -36,11 +36,19 @@ pub fn foo2() void {
 
 pub fn runArray() void {
     const array = [_]i32{ 10, 20, 30, 40, 50 };
-    const menorValor: i32 = 0;
+    var menorValor: i32 = 0;
+    var maiorValor: i32 = 0;
 
     // Percorre o array com índice e valor
     for (array) |valor| {
-        if (valor > menorValor)
-            std.debug.print(" {}\n", .{valor});
+        if (valor < menorValor) {
+            menorValor = valor;
+        }
+        if (valor > maiorValor) {
+            maiorValor = valor;
+        }
     }
+    // Imprime o menor e maior valor
+    std.debug.print("Menor valor: {}\n", .{menorValor});
+    std.debug.print("Maior valor: {}\n", .{maiorValor});
 }
