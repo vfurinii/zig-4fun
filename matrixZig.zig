@@ -26,7 +26,14 @@ pub fn main() !void {
     for (matriz) |linha| {
     valorTotalPrimeiraColunaSomado += linha[0];
     }
-    try stdout.print("total 1 linha somado: {} ", .{valorTotalPrimeiraLinhaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 1 coluna somado: {} ", .{valorTotalPrimeiraColunaSomado});
+    if(valorTotalPrimeiraLinhaSomado > valorTotalPrimeiraColunaSomado){
+        try stdout.print("A soma da primeira linha eh maior que a soma da primeira coluna\n", .{});
+    } else if(valorTotalPrimeiraLinhaSomado < valorTotalPrimeiraColunaSomado){
+        try stdout.print("A soma da primeira linha eh menor que a soma da primeira coluna\n", .{});
+    } else {
+        try stdout.print("A soma da primeira linha eh igual a soma da primeira coluna\n", .{});
+    }
+    //try stdout.print("total 1 linha somado: {} ", .{valorTotalPrimeiraLinhaSomado});
+    //try stdout.print("\n", .{});
+    //try stdout.print("total 1 coluna somado: {} ", .{valorTotalPrimeiraColunaSomado});
 }
