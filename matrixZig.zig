@@ -58,19 +58,4 @@ pub fn main() !void {
     try stdout.print("total 2 coluna somado: {} ", .{valorTotalSegundaColunaSomado});
     try stdout.print("\n", .{});
     try stdout.print("total 3 coluna somado: {} ", .{valorTotalTerceiraColunaSomado});
-
-
-    //if(valorTotalPrimeiraLinhaSomado > valorTotalPrimeiraColunaSomado){
-    //     try stdout.print("A soma da primeira linha eh maior que a soma da primeira coluna\n", .{});
-    // } else if(valorTotalPrimeiraLinhaSomado < valorTotalPrimeiraColunaSomado){
-    //     try stdout.print("A soma da primeira linha eh menor que a soma da primeira coluna\n", .{});
-    // } else {
-    //     try stdout.print("A soma da primeira linha eh igual a soma da primeira coluna\n", .{});
-    // }
-    //
-    // if(valorTotalSegundaLinhaSomado > valorTotalPrimeiraColunaSomado){
-    //     try stdout.print("A soma da primeira linha eh maior que a soma da primeira coluna\n", .{});
-    // }
-    //try stdout.print("\n", .{});
-    //try stdout.print("total 1 coluna somado: {} ", .{valorTotalPrimeiraColunaSomado});
 }
