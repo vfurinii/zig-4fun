@@ -58,4 +58,10 @@ pub fn main() !void {
     try stdout.print("total 2 coluna somado: {} ", .{valorTotalSegundaColunaSomado});
     try stdout.print("\n", .{});
     try stdout.print("total 3 coluna somado: {} ", .{valorTotalTerceiraColunaSomado});
+
+    if(valorTotalPrimeiraLinhaSomado == valorTotalSegundaLinhaSomado and valorTotalSegundaLinhaSomado == valorTotalTerceiraLinhaSomado) {
+        try stdout.print("\nlinha somada eh igual\n", .{});
+    } else {
+        try stdout.print("\nlinha somada nao eh igual\n", .{});
+    }
 }
