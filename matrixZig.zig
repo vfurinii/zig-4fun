@@ -1,67 +1,75 @@
 const std = @import("std");
 
-pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
+pub fn calculateMinimumHP(allocator: *std.mem.Allocator, dungeon: [][]i32) !i32 {
+    const m = dungeon.len;
+    const n = dungeon[0].len;
 
-    var valorTotalSomado:i32 = 0;
+    // Allocate memory for dp (array of pointers to arrays of i32)
+    var dp = try allocator.alloc([]i32, m);
+    defer {
+        // Free each row
+        for (dp) |row| {
+            allocator.free(row);
+        }
+        allocator.free(dp);
+    }
 
-    const matriz: [3][3]i32 = .{
-    .{23, 10, 3},
-    .{13, 4, 9},
-    .{7, 8, 9},
-    };
-
-    for (matriz) |linha| {
-        for (linha) |valor| {
-            valorTotalSomado += valor;
+    // Initialize each row with `n` columns
+    for (dp, 0..) |*row_ptr, i| {
+        const row = try allocator.alloc(i32, n);
+        row_ptr.* = row;
+        for (row, 0..) |*val, _| {
+            val.* = 0;
         }
     }
 
-    var valorTotalPrimeiraLinhaSomado:i32 = 0;
-    var valorTotalSegundaLinhaSomado:i32 = 0;
-    var valorTotalTerceiraLinhaSomado:i32 = 0;
-    var valorTotalPrimeiraColunaSomado:i32 = 0;
-    var valorTotalSegundaColunaSomado:i32 = 0;
-    var valorTotalTerceiraColunaSomado:i32 = 0;
+    // Bottom-right cell
+    dp[m - 1][n - 1] = @max(1, 1 - dungeon[m - 1][n - 1]);
 
-    for (matriz[0]) |valor| {
-        valorTotalPrimeiraLinhaSomado += valor;
+    // Last column
+    var i: usize = m - 2;
+    while (true) {
+        dp[i][n - 1] = @max(1, dp[i + 1][n - 1] - dungeon[i][n - 1]);
+        if (i == 0) break;
+        i -= 1;
     }
 
-    for (matriz[1]) |valor| {
-        valorTotalSegundaLinhaSomado += valor;
-    }
-    for (matriz[2]) |valor| {
-        valorTotalTerceiraLinhaSomado += valor;
-    }
-
-    for (matriz) |linha| {
-        valorTotalPrimeiraColunaSomado += linha[0];
+    // Last row
+    var j: usize = n - 2;
+    while (true) {
+        dp[m - 1][j] = @max(1, dp[m - 1][j + 1] - dungeon[m - 1][j]);
+        if (j == 0) break;
+        j -= 1;
     }
 
-    for (matriz) |linha| {
-        valorTotalSegundaColunaSomado += linha[1];
+    // Fill the rest of the matrix
+    var ii: usize = m - 2;
+    while (true) {
+        var jj: usize = n - 2;
+        while (true) {
+            const minHPOnExit = @min(dp[ii + 1][jj], dp[ii][jj + 1]);
+            dp[ii][jj] = @max(1, minHPOnExit - dungeon[ii][jj]);
+            if (jj == 0) break;
+            jj -= 1;
+        }
+        if (ii == 0) break;
+        ii -= 1;
     }
 
-    for (matriz) |linha| {
-        valorTotalTerceiraColunaSomado += linha[2];
-    }
+    return dp[0][0];
+}
 
-    try stdout.print("total 1 linha somado: {} ", .{valorTotalPrimeiraLinhaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 2 linha somado: {} ", .{valorTotalSegundaLinhaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 3 linha somado: {} ", .{valorTotalTerceiraLinhaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 1 coluna somado: {} ", .{valorTotalPrimeiraColunaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 2 coluna somado: {} ", .{valorTotalSegundaColunaSomado});
-    try stdout.print("\n", .{});
-    try stdout.print("total 3 coluna somado: {} ", .{valorTotalTerceiraColunaSomado});
+pub fn main() !void {
+    const std = @import("std");
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
 
-    if(valorTotalPrimeiraLinhaSomado == valorTotalSegundaLinhaSomado and valorTotalSegundaLinhaSomado == valorTotalTerceiraLinhaSomado) {
-        try stdout.print("\nlinha somada eh igual\n", .{});
-    } else {
-        try stdout.print("\nlinha somada nao eh igual\n", .{});
-    }
+    const dungeon = [][]i32{
+        &[_]i32{ -2, -3, 3 },
+        &[_]i32{ -5, -10, 1 },
+        &[_]i32{ 10, 30, -5 },
+    };
+
+    const result = try calculateMinimumHP(allocator, dungeon);
+    std.debug.print("Minimum initial health required: {}\n", .{result});
 }
